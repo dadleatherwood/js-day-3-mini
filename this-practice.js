@@ -1,32 +1,41 @@
 // The Keyword This
 
-// Oh, JavaScript! Why is 'this' so confusing? Well, it is. So let's practice until you're convinced it makes sense. 
+// Oh, JavaScript! Why is 'this' so confusing? Well, it is. So let's practice until you're convinced it makes sense.
 
-/* 
+/*
 
 1. Create a car with an object literal.
 
-Create an object called car using the object literal notation ({}). Give it a make property, a model property, and a year property. Then give it a method called getAge. This method should take in the current year and return the age of the car as an integer. 
+Create an object called car using the object literal notation ({}). Give it a make property, a model property, and a year property. Then give it a method called getAge. This method should take in the current year and return the age of the car as an integer.
 */
 
 // Code here
-var car;
+var car =
+{
+  make: 'Jeep',
+  model: 'Wrangler',
+  year: 2010,
+  getAge: function (currentYear) {
+    var age = currentYear - this.year
+    return age;
+  }
+};
 
 
-/* 
+/*
 2. Implicit Binding
 
 Call the getAge method using the car object. Don't forget to pass the year argument. Assign the result to the variable 'carAge' so I can test it.
 */
 
 // Code here
-var carAge;
+var carAge = car.getAge(2017);
 
 
 
 /*
 
-/* 
+/*
 3. Create anotherCar object literal
 
 Create another object called anotherCar with the make, model, and year properties. Do not include the getAge method.
@@ -34,41 +43,48 @@ Create another object called anotherCar with the make, model, and year propertie
 */
 
 // Code here
-var anotherCar;
+var anotherCar =
+{
+  make: 'Honda',
+  model: 'Ridgeline',
+  year: 2008
+};
 
 
 
 /*
 4. Explicit Binding with Bind
 
-Now bind the getAge method of the first car object to the context of anotherCar. Assign this bound function to the variable getAgeForAnotherCar. 
+Now bind the getAge method of the first car object to the context of anotherCar. Assign this bound function to the variable getAgeForAnotherCar.
 */
 
 // Code here
-var getAgeForAnotherCar;
+var getAgeForAnotherCar = car.getAge.bind(anotherCar);
+getAgeForAnotherCar(2017)
 
 
 
-/* 
+/*
 5. Explicit Binding with Call
 
-Now assign a year property to the window object. Give that property the value 2000. Then call the getAge method of car with the window object as the context. Assign the result of that call to the variable windowAge. 
+Now assign a year property to the window object. Give that property the value 2000. Then call the getAge method of car with the window object as the context. Assign the result of that call to the variable windowAge.
 
 */
 
 // Code here
-var windowAge;
+window.year = 2000;
+var windowAge = car.getAge.call(window, 2017);
 
-/* 
+/*
 
-/* 
+/*
 
 6. Explicit Binding with Apply
 
-Below you have two objects, both with purchaseTotals, but only one with a method called addToTotal. 
+Below you have two objects, both with purchaseTotals, but only one with a method called addToTotal.
 
 Use the apply method to call the addToTotal method of customer1 for customer2 while passing in the numbers 1, 2, and 3.
-*/ 
+*/
 
 var customer1 = {
    name: "Brian",
@@ -85,13 +101,13 @@ var customer2 = {
 }
 
 // use apply here
-
+customer1.addToTotal.apply(customer2,[1,2,3]);
 
 
 /*
 7. More Explicit Binding
 
-Bind the makeSound method of the animal object to the dog object. Assign this bound function to the variable called makeDogSound. 
+Bind the makeSound method of the animal object to the dog object. Assign this bound function to the variable called makeDogSound.
 
 */
 
@@ -111,15 +127,16 @@ var dog = {
 }
 
 // Code here
-var makeDogSound;
+var makeDogSound = animal.makeSound.bind(dog);
 
 // Use call or apply to invoke the makeSound method with different objects.
-
+var newDog = {};
+var newSound = animal.makeSound.call(newDog);
 
 /*
 
 8. More Call and Apply Practice
-Below is an object with a findProp method. 
+Below is an object with a findProp method.
 
 */
 
@@ -140,12 +157,19 @@ Now you can use my method with any object. Create an object and use my findProp 
 */
 
 // Code here
+var user1 =
+{
+  username: "jacobleatherwood",
+  password:  "1234hjkl",
+  email: "jacob.22@email.com"
+}
 
+var user1Email = objWithFind.findProp.call(user1, "jacob.22@email.com");
 
 /*
-Below is another object with a filter method. This method filters returns a new object which contains only the properties with values that match the values in the array you pass to the method. 
+Below is another object with a filter method. This method filters returns a new object which contains only the properties with values that match the values in the array you pass to the method.
 
-*/ 
+*/
 
 var objWithFilter = {
    filter: function(values) {
@@ -161,34 +185,35 @@ var objWithFilter = {
    }
 }
 
-// Now call my filter method on a new object. 
+// Now call my filter method on a new object.
+var answer = objWithFilter.filter.apply(user1,["jacobleatherwood", "1234hjkl"])
 
+/*
+9. Prototypes
 
-/* 
-9. Prototypes 
-
-Remember that the prototype methods availabe on the Array, String, etc. objects use the this context to perform operations based on the context. Here's an example of a useless prototype method. 
+Remember that the prototype methods availabe on the Array, String, etc. objects use the this context to perform operations based on the context. Here's an example of a useless prototype method.
 
 */
 Array.prototype.findLength = function() {
    return this.length;
 }
 
-// Now I can call findLength on any array I create, as in the following: 
+// Now I can call findLength on any array I create, as in the following:
 var arr = [1, 2, 3]
 arr.findLength()
 
-// But I can also call the findLength method on the Array.prototype object if I pass a context to it. 
+// But I can also call the findLength method on the Array.prototype object if I pass a context to it.
 Array.prototype.findLength.call([1, 2, 3]);
 
 /*
-Let's Use the Array.prototype or String.prototype or Object.prototype methods to practice call and apply. 
+Let's Use the Array.prototype or String.prototype or Object.prototype methods to practice call and apply.
 
 Call the String.prototype.toUpperCase method and pass it a new string as a context.
 */
 
 // Code here
 Array.prototype.filter.call([1, 2, 3], function() {return true})
+String.prototype.toUpperCase.call("Jimmy is awesome!");
 
 
 /*
@@ -196,7 +221,7 @@ Call the Array.prototype.filter method and pass it a new array as context and a 
 */
 
 // Code here
-
+Array.prototype.filter.call([3,4,5,5], function() {return true});
 
 
 /*
@@ -204,19 +229,24 @@ Apply the String.prototype.replace method and pass it a new string as context an
 */
 
 // Code here
-
+String.prototype.replace.apply("Jacob is here!",['Jacob', 'Billy']);
 
 /*
 10. Constructor Functions
 
-We'll cover these again tomorrow, but because the new keyword is in this lesson, let's pratice writing a constructor function again. 
+We'll cover these again tomorrow, but because the new keyword is in this lesson, let's pratice writing a constructor function again.
 
-Create a constructor function for Person. Take in the name, age, and weight of a person, and assign these values to properties on the object. 
+Create a constructor function for Person. Take in the name, age, and weight of a person, and assign these values to properties on the object.
 
 */
 
 // Code here
-/* 
+function Person (name, age, weight) {
+  this.name = name;
+  this.age = age;
+  this.weight = weight;
+}
+/*
 11. Prototype Creation
 
 Now give your Person object a prototype method called addWeight. Take in the addedWeight and add it to the weight of the person.
@@ -224,17 +254,20 @@ Now give your Person object a prototype method called addWeight. Take in the add
 */
 
 // Code here
-
+Person.prototype.addWeight = function (addedWeight) {
+  this.weight += addedWeight;
+}
 
 /*
 12. Create Persons
 
 Create two persons, brian and briansClone, based on your Person object. Call the changeWeight method for each. Console.log the weight of each person to see if the weight has changed.
 
-*/ 
+*/
 
 // Code here
-var brian;
-var briansClone;
+var brian = {weight: 150};
+var briansClone = {weight: 155};
 
-
+brian.addWeight(20);
+briansClone.addWeight(25);
